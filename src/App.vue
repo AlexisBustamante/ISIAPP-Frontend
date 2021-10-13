@@ -23,8 +23,10 @@ export default {
 </script>
 
 <style>
-main{
+/**main
+{
   background-image:url('./assets/wallpaper-Login.jpg');
   background-size:cover;
-}
+}**/
+
 </style>

@@ -51,8 +51,7 @@ export default {
   data: () => ({
     items: [
       { title: "Perfil", icon: "mdi-view-dashboard", ruta: "/profile" },
-      { title: "Mis Clientes", icon: "mdi-account", ruta: "/clientes" },
-    { title: "Vehiculos", icon: "mdi-car", ruta: "/vehiculos" }
+      { title: "Mis Pacientes", icon: "mdi-account", ruta: "/clientes" }
     ],
     right: null,
     mini: false,

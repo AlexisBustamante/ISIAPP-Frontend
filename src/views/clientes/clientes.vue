@@ -90,7 +90,98 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog max-width="650" v-model="add">
+
+<v-dialog dark v-model="add" max-width="500">
+      <v-card :style="'border: 1px solid grey'">
+
+  <v-stepper vertical v-model="step" editable=true>
+    <v-stepper-step step="1" :complete="step>1" >Datos Personales</v-stepper-step>
+
+    <v-stepper-content step="1">
+
+      <v-card dark :style="'border: 1px solid grey'">
+        <v-card-title>Crear Cliente Nuevo </v-card-title>
+
+        <v-card-text>
+          <v-form ref="addClienteForm" @submit.prevent="addCliente()">
+            <v-row>
+              <v-col>
+                <v-text-field
+                  prepend-icon="mdi-account-box-multiple"
+                  label="Nombres"
+                  :rules="[(v) => !!v || 'Nombre es requerido']"
+                  v-model="clienteToAdd.c_nombre"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Apellidos"
+                  :rules="[(v) => !!v || 'Apellidos es requerido']"
+                  v-model="clienteToAdd.c_apellidos"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field
+                  prepend-icon="mdi-card-account-details-outline"
+                  label="Direccion"
+                  :rules="[(v) => !!v || 'Direccion es requerido']"
+                  v-model="clienteToAdd.c_direccion"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  prepend-icon="mdi-phone-dial"
+                  label="Telefono "
+                  v-model="clienteToAdd.c_telefono"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  prepend-icon="mdi-email"
+                  label="E-mail"
+                  :rules="emailRules"
+                  v-model="clienteToAdd.c_email"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-btn block class="primary mt-3" type="submit">Agregar</v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+      </v-card>
+      <v-btn
+        color="primary"
+        @click="step = 2"
+      >
+        Continue
+      </v-btn>
+
+      <v-btn text>
+        Cancel
+      </v-btn>
+    </v-stepper-content>
+
+    <v-stepper-step step="2">vStepperStepText</v-stepper-step>
+
+
+  </v-stepper>
+
+      </v-card>
+  
+
+</v-dialog>
+
+
+
+    <v-dialog max-width="650" v-model="addold">
       <v-card dark :style="'border: 1px solid grey'">
         <v-card-title>Crear Cliente Nuevo </v-card-title>
 
@@ -190,13 +281,16 @@
         </template>
       </v-data-table>
     </v-card>
+
   </v-container>
 </template>
+
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 export default {
   data: () => ({
+    step:1,
     details: false,
     load: false,
     edit: false,
