@@ -17,16 +17,14 @@ export default {
 
   data: () => ({
     //
-    menubar:true
   }),
 };
 </script>
 
 <style>
-/**main
-{
-  background-image:url('./assets/wallpaper-Login.jpg');
-  background-size:cover;
-}**/
+main{
 
+  background-image: url('../src/assets/wallpaper-Login.jpg');
+  background-size:cover;
+}
 </style>

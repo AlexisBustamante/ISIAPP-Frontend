@@ -3,25 +3,25 @@
     <Navbar :usr_name="user.usr_name" :usr_rol="user.usr_rol"> </Navbar>
 
     <v-card elevation="24" dark :style="'border: 1px solid grey'">
-    <v-card-title>
-    Nuevo Prospecto
-    </v-card-title>
-    <v-divider></v-divider>
+        <v-card-title>
+            Editar prospecto id :{{$route.params.idventa}}
+        </v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
-            <v-form outlined ref="addProspectoForm" @submit.prevent="addProspecto()">
+            <v-form outlined ref="addProspectoForm" @submit.prevent="UpdateProspecto()">
 
                 <v-row>
                     <v-col cols="12" sm="6" md="4">
-                        <v-menu dark ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="FechaCaptacion" transition="scale-transition" offset-y min-width="auto">
+                        <v-menu dark ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="fechacaptacion" transition="scale-transition" offset-y min-width="auto">
                             <template v-slot:activator="{ on, attrs }">
-                                <v-text-field v-model="FechaCaptacion" label="Fecha Captación" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                <v-text-field v-model="fechacaptacion" label="Fecha Captación" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
                             </template>
-                            <v-date-picker v-model="FechaCaptacion" no-title scrollable>
+                            <v-date-picker v-model="fechacaptacion" no-title scrollable>
                                 <v-spacer></v-spacer>
                                 <v-btn text color="error" @click="menu = false">
                                     Cancel
                                 </v-btn>
-                                <v-btn text color="primary" @click="$refs.menu.save(FechaCaptacion)">
+                                <v-btn text color="primary" @click="$refs.menu.save(fechacaptacion)">
                                     OK
                                 </v-btn>
                             </v-date-picker>
@@ -46,7 +46,7 @@
 
                 <v-row>
                     <v-col cols="2" sm="6" md="6">
-                        <v-text-field name="nombrePaciente" label="Nombre del Paciente" id="nombrePaciente" v-model="nombrePaciente" :rules="campoObligatorio"></v-text-field>
+                        <v-text-field name="nombrePaciente" label="Nombre del Paciente" id="nombrePaciente" v-model="nombrepaciente" :rules="campoObligatorio"></v-text-field>
                     </v-col>
                     <v-col cols="2" sm="6" md="6">
                         <v-text-field name="Diagnostico" label="Diagnóstico" id="Diagnostico" v-model="diagnostico" :rules="campoObligatorio"></v-text-field>
@@ -118,7 +118,7 @@ export default {
         contacto: '',
         visitaClinica: '',
         hab: '',
-        nombrePaciente: '',
+        nombrepaciente: '',
         pediatrico: '',
         especialidadMédica: '',
         pediatrico: '',
@@ -136,11 +136,11 @@ export default {
         diagnostico: '',
         montomesapp: 0,
         procedencia: '',
+        fechacaptacion: null,
         estadoArr: ['APROBADO', 'RECHAZADO', 'PENDIENTE'],
         campoObligatorio: [
             v => !!v || 'Campo obligatorio'
         ],
-        FechaCaptacion: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         menu: false,
         modal: false,
         menu2: false,
@@ -175,33 +175,62 @@ export default {
             this.$router.push("/");
             //se redirecciona al Home si el objeto storage noe xistwe
         } else {
-            try {
-                //console.log(this.user);
-                //const res = await this.axios.post("/prospectos/mis-prospectos", this.user);
-
-                // console.log(res.data);
-
-                //this.ProspectosListar = res.data;
-            } catch (error) {
-                console.log(error);
-            }
+            this.obtenerDatos();
         }
     },
 
     methods: {
-        async addProspecto() {
-            //console.log(this.user);
-            let valid = this.$refs.addProspectoForm.validate();
-            if (valid) {
+        async obtenerDatos() {
+            const idventa = this.$route.params.idventa;
 
-                this.obProspecto.FechaCaptacion = this.FechaCaptacion;
+            try {
+                const res = await this.axios.post(`/prospectos/obtenerventa/${idventa}`);
+                this.obProspecto = res.data.prospecto[0];
+
+                console.log(this.obProspecto);
+                console.log(this.obProspecto.fechacaptacion.substr(0, 10));
+
+                this.fechacaptacion = this.obProspecto.fechacaptacion.substr(0, 10);
+                this.contacto = this.obProspecto.contacto;
+                this.visitaClinica = this.obProspecto.visitaClinica;
+                this.hab = this.obProspecto.hab;
+                this.nombrepaciente = this.obProspecto.nombrepaciente;
+                this.especialidadMedica = this.obProspecto.especialidadMedica;
+                this.pediatrico = this.obProspecto.pediatrico;
+                this.medicoTratante = this.obProspecto.medicoTratante;
+                this.prc_exito = this.obProspecto.prc_exito;
+                this.tratamiento_atbx = this.obProspecto.tratamiento_atbx;
+                this.nivel = this.obProspecto.nivel;
+                this.tipo = this.obProspecto.tipo;
+                this.prevision = this.obProspecto.prevision;
+                this.estado = this.obProspecto.estado;
+                this.motivo = this.obProspecto.motivo;
+                this.contacto = this.obProspecto.contacto;
+                this.comentario = this.obProspecto.comentario;
+                this.financiador = this.obProspecto.financiador;
+                this.diagnostico = this.obProspecto.diagnostico;
+                this.montomesapp = this.obProspecto.montomesapp;
+                this.procedencia = this.obProspecto.procedencia;
+                this.user.id_usr = this.obProspecto.idusr;
+                this.fechaingreso = this.obProspecto.fechaingreso;
+                this.fecharechazo = this.obProspecto.fecharechazo;
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async UpdateProspecto() {
+
+            try {
+                this.obProspecto.fechacaptacion = this.fechacaptacion;
                 this.obProspecto.contacto = this.contacto;
-                this.obProspecto.visitaClinica = this.visitaClinica;
+                this.obProspecto.visitaclinica = this.visitaclinica;
                 this.obProspecto.hab = this.hab;
-                this.obProspecto.nombrePaciente = this.nombrePaciente;
-                this.obProspecto.especialidadMedica = this.especialidadMedica;
+                this.obProspecto.nombrepaciente = this.nombrepaciente;
+                this.obProspecto.especialidadmedica = this.especialidadmedica;
                 this.obProspecto.pediatrico = this.pediatrico;
-                this.obProspecto.medicoTratante = this.medicoTratante;
+                this.obProspecto.medicotratante = this.medicotratante;
                 this.obProspecto.prc_exito = this.prc_exito;
                 this.obProspecto.tratamiento_atbx = this.tratamiento_atbx;
                 this.obProspecto.nivel = this.nivel;
@@ -218,25 +247,25 @@ export default {
                 this.obProspecto.idusr = this.user.id_usr;
                 this.obProspecto.fechaingreso = null;
                 this.obProspecto.fecharechazo = null;
-                //console.log(this.obProspecto);
 
-                try {
-                    const res = await this.axios.post(
-                        "/prospectos/nuevo",
-                        this.obProspecto);
-                    this.$router.push("/prospectos");
+                const res = await this.axios.post(
+                    "/prospectos/editarprospecto",
+                    this.obProspecto);
 
-                } catch (error) {}
-                console.log('error backend');
-               
+                this.$router.push("/prospectos");
+
+            } catch (error) {
+                console.log(error);
             }
-        }
+
+        },
     },
     computed: {
 
     },
     components: {
         Navbar,
-    },
+    }
+
 };
 </script>

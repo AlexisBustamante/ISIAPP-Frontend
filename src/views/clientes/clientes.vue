@@ -179,8 +179,6 @@
 
 </v-dialog>
 
-
-
     <v-dialog max-width="650" v-model="addold">
       <v-card dark :style="'border: 1px solid grey'">
         <v-card-title>Crear Cliente Nuevo </v-card-title>
@@ -353,6 +351,7 @@ export default {
       this.del = true;
     },
     async EliminarCliente(c_id) {
+      
       try {
         const res = await this.axios.delete(`/clientes/eliminar/${c_id}`);
 

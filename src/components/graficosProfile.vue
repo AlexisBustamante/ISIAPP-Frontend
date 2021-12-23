@@ -43,12 +43,7 @@
 <script>
   export default {
     data: () => ({
-      labels: [
-        
-      ],
-      value: [
-        
-      ],
+
       
     }),
     props: ["value","labels","colorgrafico"],

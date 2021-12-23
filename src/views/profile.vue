@@ -1,6 +1,32 @@
 <template>
   <v-container fluid>
-    <Navbar :usr_name="user.usr_name" :usr_rol="user.usr_rol"> </Navbar>
+    <Navbar :usr_name="user.usr_name" :usr_rol="user.usr_rol" > </Navbar>
+    <v-row>
+      <v-col>
+        <graficos
+          :value="value"
+          :labels="labels"
+          :colorgrafico="color1"
+        ></graficos>
+      </v-col>
+
+      <v-col>
+        <graficos
+          :value="value"
+          :labels="labels"
+          :colorgrafico="color2"
+        ></graficos>
+      </v-col>
+
+      <v-col>
+        <graficos
+          :value="value"
+          :labels="labels"
+          :colorgrafico="color3"
+        ></graficos>
+      </v-col>
+    </v-row>
+
 
     <v-row>
       <v-col>
@@ -27,12 +53,14 @@
         ></graficos>
       </v-col>
     </v-row>
+  
   </v-container>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import graficos from "@/components/graficosProfile";
+
 export default {
   data: () => ({
     color1: "green",
@@ -78,7 +106,7 @@ export default {
   created: function() {
     //cuando se carga la vista se cargan los datos del usuario que ingresó
     this.user = JSON.parse(sessionStorage.getItem("session"));
-
+  this.user.displayMenu = JSON.parse(sessionStorage.getItem("displayMenu"));
     if (this.user == null) {
       this.$router.push("/");
       //se redirecciona al Home si el objeto storage noe xistwe
@@ -119,6 +147,7 @@ export default {
   components: {
     Navbar,
     graficos,
+    
   },
 };
 </script>
